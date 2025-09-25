@@ -31,7 +31,6 @@ const signup = async (req, res) => {
                 _id: newUser._id,
                 username: newUser.username,
                 email: newUser.email,
-                token: newUser.token,
                 profilePic: newUser.profilePic
             });
         }else {
@@ -42,6 +41,23 @@ const signup = async (req, res) => {
     }
 };
 
+const login = async () => {
+    const { email, password } = req.body;
+    try {
+        const user = User.findOne({email});
+        const isMatch = await bcrypt.compare(password, user.password);
+        if(!user || !isMatch) return res.status(400).json({ message: "Invalid credentials" });
+        generateToken(user._id, res);
+        return res.status(200).json({
+            _id: user._id,
+            username: user.username,
+            email: user.email,
+            profilePic: user.profilePic,
+        });
+    } catch (error) {
+        console.log("Error logging in user", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
 
-
-export default { signup };
+export default { signup, login };
