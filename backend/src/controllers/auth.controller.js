@@ -60,4 +60,14 @@ const login = async () => {
     }
 }
 
-export default { signup, login };
+const logout = async (req, res) => {
+    try {
+        res.cookie("token", "", {maxAge: 0});
+        res.status(200).json({ message: "Logged out successfully" });
+    } catch (error) {
+        console.log("Error logging out user", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
+
+export default { signup, login, logout };
