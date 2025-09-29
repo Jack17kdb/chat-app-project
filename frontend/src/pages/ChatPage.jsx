@@ -282,37 +282,38 @@ const ChatPage = () => {
 
                 onSubmit={handleSend}
 
-                className="flex items-center gap-3 p-4 bg-gray-900/70 border-t border-gray-700"
+                className="flex items-center gap-3 p-4 fixed bottom-0 w-full bg-gray-900/70 border-t border-gray-700"
 
             >
+                <div className="">
+                    <input
 
-                <input
+                        type="text"
 
-                    type="text"
+                        name="message"
 
-                    name="message"
+                        value={newMessage}
 
-                    value={newMessage}
+                        onChange={(e) => setNewMessage(e.target.value)}
 
-                    onChange={(e) => setNewMessage(e.target.value)}
+                        placeholder="Text Console 📩🇰🇪..."
 
-                    placeholder="Text Console 📩🇰🇪..."
+                        className="flex-1 px-6 py-3 ml-100 w-[800px] rounded-xl bg-gray-800 text-white border border-gray-600 focus:border-cyan-400 focus:ring focus:ring-cyan-500/40 outline-none"
 
-                    className="flex-1 px-4 py-2 rounded-xl bg-gray-800 text-white border border-gray-600 focus:border-cyan-400 focus:ring focus:ring-cyan-500/40 outline-none"
+                    />
 
-                />
+                    <button
 
-                <button
+                        type="submit"
 
-                    type="submit"
+                        className="px-6 py-3 ml-3 bg-cyan-500 hover:bg-cyan-400 text-gray-900 font-semibold rounded-xl shadow-md transition"
 
-                    className="px-5 py-2 bg-cyan-500 hover:bg-cyan-400 text-gray-900 font-semibold rounded-xl shadow-md transition"
+                    >
 
-                >
+                        Send
 
-                    Send
-
-                </button>
+                    </button>
+                </div>
 
             </form>
 
