@@ -1,4 +1,5 @@
 import React from 'react'
+import { FiMail } from 'react-icons/fi'
 
 const ForgotPassword = () => {
     return (
@@ -21,19 +22,22 @@ const ForgotPassword = () => {
                         <label htmlFor="email" className="block mb-1 text-sm text-gray-300">
                             Email
                         </label>
-                        <input
-                            type="email"
-                            id="email"
-                            placeholder="Enter your email"
-                            required
-                            className="w-full px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/50"
-                        />
+                        <div className="relative">
+                            <FiMail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                            <input
+                                type="email"
+                                id="email"
+                                placeholder="Enter your email"
+                                required
+                                className="w-full pl-10 pr-4 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/50"
+                            />
+                        </div>
                     </div>
 
                     {/* Button */}
                     <button
                         type="submit"
-                        className="w-full py-2 px-4 rounded-lg bg-gradient-to-r from-cyan-500 to-purple-500 text-white font-semibold hover:shadow-[0_0_15px_rgba(34,211,238,0.7)] transition duration-300"
+                        className="cursor-pointer active:scale-98 w-full py-2 px-4 rounded-lg bg-gradient-to-r from-cyan-500 to-purple-500 text-white font-semibold hover:shadow-[0_0_15px_rgba(34,211,238,0.7)] transition duration-300"
                     >
                         Send Reset Link
                     </button>

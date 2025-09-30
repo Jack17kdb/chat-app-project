@@ -13,7 +13,7 @@ const signup = async (req, res) => {
             return res.status(400).json({ message: "Password must be at least 6 characters long" });
         }
 
-        const user = User.findOne({ email });
+        const user = await User.findOne({ email });
         if (user) return res.status(400).json({ message: "User already exists" });
 
         const salt = await bcrypt.genSalt(10);
@@ -42,10 +42,10 @@ const signup = async (req, res) => {
     }
 };
 
-const login = async () => {
+const login = async (req, res) => {
     const { email, password } = req.body;
     try {
-        const user = User.findOne({email});
+        const user = await User.findOne({email});
         const isMatch = await bcrypt.compare(password, user.password);
         if(!user || !isMatch) return res.status(400).json({ message: "Invalid credentials" });
         generateToken(user._id, res);

@@ -1,43 +1,45 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-
+import React, { useEffect } from "react";
+import { useAuthStore } from "./store/AuthStore.js"
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
 import ForgotPassword from "./pages/ForgotPassword.jsx";
 import Status from "./pages/Status.jsx";
 import ProfilePage from "./pages/ProfilePage.jsx";
 import ChatPage from "./pages/ChatPage.jsx";
-
-import React, { useEffect } from "react";
-import { db } from "./firebase";
-import { collection, getDocs } from "firebase/firestore";
+import { Loader } from "lucide-react";
+import { Toaster } from "react-hot-toast";
 
 function App() {
-    // 🔹 This runs once to check Firebase connection
+    const {authUser, checkAuth, isCheckingAuth} = useAuthStore();
+
     useEffect(() => {
-        const test = async () => {
-            try {
-                const querySnapshot = await getDocs(collection(db, "messages"));
-                querySnapshot.forEach((doc) => {
-                    console.log(doc.id, " => ", doc.data());
-                });
-            } catch (error) {
-                console.error("Firebase connection error:", error);
-            }
-        };
-        test();
-    }, []);
+        checkAuth();
+    }, [checkAuth]);
+
+    console.log({ authUser });
+
+    if (isCheckingAuth && !authUser) return (
+        <div className="flex items-center justify-center h-screen">
+            <Loader className="size-10 animate-spin"/>
+        </div>
+    )
+
 
     return (
-        <BrowserRouter>
-            <Routes>
-                <Route path="/" element={<ChatPage />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/forgot-password" element={<ForgotPassword />} />
-                <Route path="/status" element={<Status />} />
-                <Route path="/profile" element={<ProfilePage />} />
-            </Routes>
-        </BrowserRouter>
+        <div>
+            <BrowserRouter>
+                <Routes>
+                    <Route path="/" element={<ChatPage />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
+                    <Route path="/forgot-password" element={<ForgotPassword />} />
+                    <Route path="/status" element={<Status />} />
+                    <Route path="/profile" element={<ProfilePage />} />
+                </Routes>
+                <Toaster />
+            </BrowserRouter>
+        </div>
     );
 }
 
