@@ -30,12 +30,12 @@ function App() {
         <div>
             <BrowserRouter>
                 <Routes>
-                    <Route path="/" element={<ChatPage />} />
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/register" element={<Register />} />
-                    <Route path="/forgot-password" element={<ForgotPassword />} />
-                    <Route path="/status" element={<Status />} />
-                    <Route path="/profile" element={<ProfilePage />} />
+                    <Route path="/" element={authUser ? <ChatPage /> : <Login />} />
+                    <Route path="/login" element={!authUser ? <Login /> : <ChatPage />} />
+                    <Route path="/register" element={!authUser ? <Register /> : <ChatPage />} />
+                    <Route path="/forgot-password" element={!authUser ? <ForgotPassword /> : <ChatPage />} />
+                    <Route path="/status" element={authUser ? <Status /> : <Login />} />
+                    <Route path="/profile" element={authUser ? <ProfilePage /> : <Login />} />
                 </Routes>
                 <Toaster />
             </BrowserRouter>
