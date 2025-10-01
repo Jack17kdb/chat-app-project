@@ -6,7 +6,7 @@ const EmptyContainer = () => {
         <div className="max-w-md mx-auto">
         <div className="text-6xl mb-4">💬</div>
         <h3 className="text-2xl font-semibold text-white mb-2">
-        Select a user to start chatting
+        Select a friend to start chatting
         </h3>
         <p className="text-gray-400 text-lg">
         Choose a contact to begin your conversation 😊

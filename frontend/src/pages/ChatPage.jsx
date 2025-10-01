@@ -38,7 +38,7 @@ const ChatPage = () => {
       <>
       {/* Chat messages */}
       <div className="flex-1 overflow-y-auto">
-      <ChatContainer messages={messages} />
+      <ChatContainer />
       </div>
       {/* Chat input */}
       <div className="flex-shrink-0">
