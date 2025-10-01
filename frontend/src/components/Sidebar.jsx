@@ -12,11 +12,10 @@ const Sidebar = () => {
     if (isUsersLoading) return <SidebarSkeleton />;
 
     return (
-        <div className="h-full bg-gray-900/90 backdrop-blur-sm p-4 flex flex-col rounded-r-2xl shadow-2xl">
+        <div className="h-full bg-gray-900/80 p-4 flex flex-col">
         {/* Header */}
-        <div className="flex-shrink-0">
-        <h1 className="text-xl font-bold text-white mb-2">Chat App</h1>
-        <h2 className="text-lg font-semibold text-white mb-4">Chats</h2>
+        <div className="flex-shrink-0 mb-6">
+        <h2 className="text-lg font-semibold text-cyan-400">Chats</h2>
         </div>
 
         {/* Users list */}
@@ -28,28 +27,33 @@ const Sidebar = () => {
             onClick={() => setSelectedUser(user)}
             className={`flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all duration-300 ${
                 selectedUser?._id === user._id
-                ? "bg-gradient-to-r from-purple-600 to-cyan-600 text-white shadow-lg shadow-purple-500/25"
-                : "hover:bg-gray-800/80 text-gray-300 hover:shadow-lg hover:shadow-gray-500/10"
+                ? "bg-gradient-to-r from-cyan-600 to-purple-600 text-white shadow-lg"
+                : "hover:bg-gray-800/60 text-gray-200"
             }`}
             >
             {/* Avatar */}
+            <div className="relative">
             <img
             src={user.avatar}
             alt={user.name}
-            className="w-10 h-10 rounded-full object-cover shadow-md"
+            className="w-12 h-12 rounded-full object-cover border-2 border-gray-600"
             />
+            {user.status === "online" && (
+                <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-400 rounded-full border-2 border-gray-900"></div>
+            )}
+            </div>
 
             {/* Name + Status */}
             <div className="flex-1 min-w-0">
-            <p className="font-medium truncate">{user.name}</p>
+            <p className="font-semibold truncate text-white">{user.name}</p>
             <p
-            className={`text-xs ${
+            className={`text-xs font-medium ${
                 user.status === "online"
                 ? "text-green-400"
                 : "text-gray-400"
             }`}
             >
-            {user.status}
+            {user.status === "online" ? "Online" : "Offline"}
             </p>
             </div>
             </div>

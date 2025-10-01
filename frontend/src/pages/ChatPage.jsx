@@ -1,46 +1,61 @@
 import React, { useState } from "react";
+import { UseChatStore } from "../store/ChatStore.js";
 import ChatNavbar from "../components/ChatNavbar.jsx";
 import Chatbar from "../components/Chatbar.jsx";
+import EmptyContainer from "../components/EmptyContainer.jsx";
+import ChatContainer from "../components/ChatContainer.jsx";
+import Sidebar from "../components/Sidebar.jsx";
 
 const ChatPage = () => {
+  const { selectedUser } = UseChatStore();
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
 
-  // Handle sending messages
   const handleSendMessage = () => {
     if (message.trim()) {
       setMessages((prev) => [...prev, { text: message, sender: "user" }]);
-      setMessage(""); // Clear input
+      setMessage("");
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-purple-900 to-gray-800 text-white">
-    {/* Top Navbar */}
+    <div className="h-screen flex flex-col bg-gradient-to-br from-gray-900 via-purple-950 to-gray-900 text-white">
+    {/* Top Navbar - Full width */}
+    <div className="flex-shrink-0">
     <ChatNavbar />
-
-    {/* Chat area */}
-    <div className="flex-1 overflow-y-auto p-4 space-y-4 mb-20 mt-16">
-    {messages.map((msg, idx) => (
-      <div
-      key={idx}
-      className={`p-3 rounded-lg max-w-xs ${
-        msg.sender === "user"
-        ? "bg-cyan-500 text-gray-900 self-end ml-auto"
-        : "bg-gray-700 text-white"
-      }`}
-      >
-      {msg.text}
-      </div>
-    ))}
     </div>
 
-    {/* Chatbar at bottom */}
-    <Chatbar
-    message={message}
-    setMessage={setMessage}
-    onSendMessage={handleSendMessage}
-    />
+    {/* Main content area below navbar */}
+    <div className="flex-1 flex min-h-0">
+    {/* Sidebar on the left */}
+    <div className="w-64 h-full">
+    <Sidebar />
+    </div>
+
+    {/* Right side - chat content area */}
+    <div className="flex-1 flex flex-col min-h-0 bg-gradient-to-br from-gray-800/40 via-purple-900/15 to-gray-900/40">
+    {selectedUser ? (
+      <>
+      {/* Chat messages */}
+      <div className="flex-1 overflow-y-auto">
+      <ChatContainer messages={messages} />
+      </div>
+      {/* Chat input */}
+      <div className="flex-shrink-0">
+      <Chatbar
+      message={message}
+      setMessage={setMessage}
+      onSendMessage={handleSendMessage}
+      />
+      </div>
+      </>
+    ) : (
+      <div className="flex-1 flex items-center justify-center">
+      <EmptyContainer />
+      </div>
+    )}
+    </div>
+    </div>
     </div>
   );
 };
