@@ -1,8 +1,30 @@
 import React, { useState } from 'react'
 import { FiMail, FiLock, FiEye, FiEyeOff } from 'react-icons/fi'
+import { useAuthStore } from '../store/AuthStore.js';
+import toast from 'react-hot-toast';
 
 const Login = () => {
+    const { isLogginIn, login } = useAuthStore();
     const [showPassword, setShowPassword] = useState(false);
+    const [userData, setUserData] = useState({
+        email: "",
+        password: ""
+    });
+
+    const validateForm = () => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if(!userData.email.trim()) return toast.error("Enter your email");
+        if (!emailRegex.test(userData.email))return toast.error("Please enter a valid email address");
+        if (!userData.password.trim()) return toast.error("Enter your password");
+
+        return true;
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const success = validateForm()
+        if(success === true) login(userData);
+    }
 
     const toggleShow = () => {
         setShowPassword(prev => !prev);
@@ -18,7 +40,7 @@ const Login = () => {
                 </h2>
 
                 {/* Form */}
-                <form className="space-y-5">
+                <form className="space-y-5" onSubmit={handleSubmit}>
                     {/* Email */}
                     <div>
                         <label htmlFor="email" className="block mb-2 text-sm text-gray-300">
@@ -30,7 +52,8 @@ const Login = () => {
                                 type="email"
                                 id="email"
                                 placeholder="Enter your email"
-                                required
+                                value = {userData.email}
+                                onChange={(e) => setUserData({...userData, email: e.target.value})}
                                 className="w-full pl-10 pr-4 py-3 rounded-xl bg-gray-800 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/50 transition"
                             />
                         </div>
@@ -47,7 +70,8 @@ const Login = () => {
                                 type={showPassword ? "text" : "password"}
                                 id="password"
                                 placeholder="Enter your password"
-                                required
+                                value = {userData.password}
+                                onChange={(e) => setUserData({...userData, password: e.target.value})}
                                 className="w-full pl-10 pr-10 py-3 rounded-xl bg-gray-800 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/50 transition"
                             />
                             {showPassword ? (
@@ -69,7 +93,7 @@ const Login = () => {
                         type="submit"
                         className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-cyan-500 to-purple-600 text-white font-semibold shadow-lg hover:shadow-[0_0_20px_rgba(34,211,238,0.7)] hover:scale-[1.02] active:scale-[0.98] transition duration-300 cursor-pointer"
                     >
-                        Login
+                        {isLogginIn ? "Logging in ..." : "Login"}
                     </button>
                 </form>
 
