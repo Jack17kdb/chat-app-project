@@ -1,8 +1,11 @@
 import React, { useState, useRef } from "react";
 import { Camera, Send, Plus, Smile, Bot, X } from "lucide-react";
 import EmojiPicker from "emoji-picker-react";
+import { UseChatStore } from "../store/ChatStore.js";
 
-const Chatbar = ({ message, setMessage, onSendMessage }) => {
+const Chatbar = () => {
+    const { sendMessages } = UseChatStore();
+    const [message, setMessage] = useState("");
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
     const fileInputRef = useRef(null);
@@ -12,10 +15,30 @@ const Chatbar = ({ message, setMessage, onSendMessage }) => {
         setShowEmojiPicker(false);
     };
 
+    const handleSendMessage = async (e) => {
+        e.preventDefault();
+        if (!message.trim() && !selectedImage) return;
+
+        try {
+            await sendMessages({
+                text: message,
+                image: selectedImage
+            });
+
+            setSelectedImage(null);
+            setMessage("");
+            if (fileInputRef.current) {
+                fileInputRef.current.value = '';
+            }
+        } catch(error) {
+            console.error("Failed to send message: ", error);
+        }
+    }
+
     const handleKeyPress = (e) => {
         if (e.key === "Enter") {
             e.preventDefault();
-            onSendMessage();
+            handleSendMessage(e);
         }
     };
 
@@ -30,6 +53,11 @@ const Chatbar = ({ message, setMessage, onSendMessage }) => {
             reader.onload = (event) => {
                 setSelectedImage(event.target.result);
             };
+
+            reader.onerror = () => {
+                toast.error("Failed to read file");
+            }
+
             reader.readAsDataURL(file);
         }
     };
@@ -38,20 +66,6 @@ const Chatbar = ({ message, setMessage, onSendMessage }) => {
         setSelectedImage(null);
         if (fileInputRef.current) {
             fileInputRef.current.value = '';
-        }
-    };
-
-    const handleSendWithImage = () => {
-        if (selectedImage) {
-            // You can pass the image data to your send function
-            // For now, we'll just send the message and clear the image
-            onSendMessage();
-            setSelectedImage(null);
-            if (fileInputRef.current) {
-                fileInputRef.current.value = '';
-            }
-        } else {
-            onSendMessage();
         }
     };
 
@@ -80,8 +94,8 @@ const Chatbar = ({ message, setMessage, onSendMessage }) => {
             </div>
             </div>
         )}
-
-        <div className="flex items-center gap-3 p-3 bg-gray-900/50 border-t border-gray-700">
+        <form onSubmit={handleSendMessage}>
+        <div className="flex items-center gap-3 p-3 backdrop-blur-lg bg-gray-900/20 border-t border-gray-700">
         {/* Hidden file input */}
         <input
         type="file"
@@ -140,8 +154,7 @@ const Chatbar = ({ message, setMessage, onSendMessage }) => {
         {/* Send button - only when typing or when image is selected */}
         {(message.trim() || selectedImage) && (
             <button
-            type="button"
-            onClick={handleSendWithImage}
+            type="submit"
             className="cursor-pointer active:scale-96 p-3 bg-cyan-500 hover:bg-cyan-400 text-gray-900 font-semibold rounded-full shadow transition"
             title="Send"
             >
@@ -149,6 +162,7 @@ const Chatbar = ({ message, setMessage, onSendMessage }) => {
             </button>
         )}
         </div>
+        </form>
         </div>
     );
 };

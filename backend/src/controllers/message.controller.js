@@ -22,7 +22,7 @@ const getMessages = async (req, res) => {
         const messages = await Message.find({
             $or: [
                 { senderId: myId, receiverId: friendId },
-                { senderId: friendId, recieverId: myId }
+                { senderId: friendId, receiverId: myId }
             ]
         });
 

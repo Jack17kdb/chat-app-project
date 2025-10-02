@@ -2,8 +2,10 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/AuthStore.js"
 import { User, Settings, LogOut, MessageSquare } from "lucide-react";
+import { UseChatStore } from "../store/ChatStore.js";
 
 const ChatNavbar = () => {
+    const { selectedUser, setSelectedUser } = UseChatStore();
     const { logout } = useAuthStore();
     const navigate = useNavigate();
 
@@ -19,7 +21,7 @@ const ChatNavbar = () => {
     return (
         <div className="flex items-center justify-between px-4 py-2 bg-gray-900/90 backdrop-blur-sm shadow-xl border-b border-gray-700/50">
         {/* App title with icon */}
-        <div className="flex items-center gap-3">
+        <div className="cursor-pointer flex items-center gap-3" onClick={() => setSelectedUser(null)}>
         <div className="p-2 bg-gradient-to-br from-cyan-500 to-purple-600 rounded-xl shadow-lg">
         <MessageSquare size={20} className="text-white" />
         </div>
