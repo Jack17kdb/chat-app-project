@@ -33,7 +33,7 @@ const ProfilePage = () => {
         {/* Avatar with Camera Icon */}
         <div className="flex justify-center mb-4 relative">
           <img
-            src={selectedImg || authUser.profilePic || "/avatar.jpeg"}
+            src={authUser.profilePic || "/avatar.jpeg"}
             alt="Avatar"
             className="w-28 h-28 rounded-full border-4 border-cyan-400 shadow-lg object-cover"
           />
@@ -48,6 +48,7 @@ const ProfilePage = () => {
             id="profile-pic"
             accept="image/*"
             className="hidden"
+            onChange={handleImageSubmit}
           />
         </div>
 

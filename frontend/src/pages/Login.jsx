@@ -1,9 +1,11 @@
-import React, { useState } from 'react'
-import { FiMail, FiLock, FiEye, FiEyeOff } from 'react-icons/fi'
+import React, { useState } from 'react';
+import { FiMail, FiLock, FiEye, FiEyeOff } from 'react-icons/fi';
+import { useNavigate } from "react-router-dom";
 import { useAuthStore } from '../store/AuthStore.js';
 import toast from 'react-hot-toast';
 
 const Login = () => {
+    const navigate = useNavigate();
     const { isLogginIn, login } = useAuthStore();
     const [showPassword, setShowPassword] = useState(false);
     const [userData, setUserData] = useState({
@@ -24,6 +26,7 @@ const Login = () => {
         e.preventDefault();
         const success = validateForm()
         if(success === true) login(userData);
+        navigate("/");
     }
 
     const toggleShow = () => {

@@ -7,6 +7,8 @@ import ForgotPassword from "./pages/ForgotPassword.jsx";
 import Status from "./pages/Status.jsx";
 import ProfilePage from "./pages/ProfilePage.jsx";
 import ChatPage from "./pages/ChatPage.jsx";
+import ResetPassword from "./pages/ResetPassword.jsx";
+import VerifyEmail from "./pages/VerifyEmailPage.jsx";
 import { Loader } from "lucide-react";
 import { Toaster } from "react-hot-toast";
 
@@ -14,7 +16,10 @@ function App() {
     const {authUser, checkAuth, isCheckingAuth} = useAuthStore();
 
     useEffect(() => {
-        checkAuth();
+        const initAuth = async () => {
+            await checkAuth();
+        };
+        initAuth();
     }, [checkAuth]);
 
     console.log({ authUser });
@@ -34,6 +39,8 @@ function App() {
                     <Route path="/login" element={!authUser ? <Login /> : <ChatPage />} />
                     <Route path="/register" element={!authUser ? <Register /> : <ChatPage />} />
                     <Route path="/forgot-password" element={!authUser ? <ForgotPassword /> : <ChatPage />} />
+                    <Route path="/reset-password" element={!authUser ? <ResetPassword /> : <ChatPage />} />
+                    <Route path="/verify-email" element={authUser && !authUser.isVerified ? <VerifyEmail /> : <ChatPage />} />
                     <Route path="/status" element={authUser ? <Status /> : <Login />} />
                     <Route path="/profile" element={authUser ? <ProfilePage /> : <Login />} />
                 </Routes>

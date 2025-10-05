@@ -1,9 +1,11 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { FiUser, FiMail, FiLock, FiEye, FiEyeOff } from "react-icons/fi";
 import { useAuthStore } from "../store/AuthStore.js";
 import toast from "react-hot-toast";
 
 const Register = () => {
+  const navigate = useNavigate();
   const { isSigningIn, signup } = useAuthStore();
 
   const [showPassword, setShowPassword] = useState(false);
@@ -28,6 +30,7 @@ const Register = () => {
     e.preventDefault();
     const success = validateForm();
     if (success ===true) signup(userData);
+    navigate("/");
   }
 
   return (
