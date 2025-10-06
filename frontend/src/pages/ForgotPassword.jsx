@@ -1,80 +1,80 @@
-import React, { useState } from 'react'
-import { FiMail } from 'react-icons/fi'
-import { useAuthStore } from '../store/AuthStore.js'
+import React, { useState } from "react";
+import { FiMail } from "react-icons/fi";
+import { useAuthStore } from "../store/AuthStore.js";
 
 const ForgotPassword = () => {
-    const [email, setEmail] = useState('')
-    const { forgotPassword, isSendingResetEmail } = useAuthStore()
+  const [email, setEmail] = useState("");
+  const { forgotPassword, isSendingResetEmail } = useAuthStore();
 
-    const handleSubmit = async (e) => {
-        e.preventDefault()
-        await forgotPassword(email)
-    }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    await forgotPassword(email);
+  };
 
-    return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-purple-900 to-gray-800 text-white px-4">
-        <div className="w-full max-w-md bg-gray-900/70 backdrop-blur-xl rounded-2xl shadow-xl p-8 border border-gray-700">
-
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-purple-900 to-gray-800 text-white px-4">
+      <div className="w-full max-w-md bg-gray-900/70 backdrop-blur-xl rounded-2xl shadow-xl p-8 border border-gray-700">
         {/* Title */}
         <h3 className="text-2xl font-bold text-center mb-4 text-cyan-400">
-        Forgot Password
+          Forgot Password
         </h3>
 
         {/* Subtitle */}
         <p className="text-sm text-gray-300 text-center mb-6">
-        Enter your email address below and we'll send you a link to reset your password.
+          Enter your email address below and we'll send you a link to reset your
+          password.
         </p>
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-        <label htmlFor="email" className="block mb-1 text-sm text-gray-300">
-        Email
-        </label>
-        <div className="relative">
-        <FiMail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-        <input
-        type="email"
-        id="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="Enter your email"
-        className="w-full pl-10 pr-4 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/50"
-        />
-        </div>
-        </div>
+          <div>
+            <label htmlFor="email" className="block mb-1 text-sm text-gray-300">
+              Email
+            </label>
+            <div className="relative">
+              <FiMail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <input
+                type="email"
+                id="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email"
+                className="w-full pl-10 pr-4 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/50"
+              />
+            </div>
+          </div>
 
-        {/* Button */}
-        <button
-        type="submit"
-        disabled={isSendingResetEmail}
-        className={`w-full py-2 px-4 rounded-lg bg-gradient-to-r from-cyan-500 to-purple-500 text-white font-semibold transition duration-300 ${
-            isSendingResetEmail
-            ? 'opacity-50 cursor-not-allowed'
-            : 'cursor-pointer active:scale-98 hover:shadow-[0_0_15px_rgba(34,211,238,0.7)]'
-        }`}
-        >
-        {isSendingResetEmail ? 'Sending...' : 'Send Reset Link'}
-        </button>
+          {/* Button */}
+          <button
+            type="submit"
+            disabled={isSendingResetEmail}
+            className={`w-full py-2 px-4 rounded-lg bg-gradient-to-r from-cyan-500 to-purple-500 text-white font-semibold transition duration-300 ${
+              isSendingResetEmail
+                ? "opacity-50 cursor-not-allowed"
+                : "cursor-pointer active:scale-98 hover:shadow-[0_0_15px_rgba(34,211,238,0.7)]"
+            }`}
+          >
+            {isSendingResetEmail ? "Sending..." : "Send Reset Link"}
+          </button>
         </form>
 
         {/* Back link */}
         <div className="text-center mt-6">
-        <a
-        href="/login"
-        className="text-sm text-gray-400 hover:text-cyan-400 transition"
-        >
-        ← Back to Login
-        </a>
+          <a
+            href="/login"
+            className="text-sm text-gray-400 hover:text-cyan-400 transition"
+          >
+            ← Back to Login
+          </a>
         </div>
 
         {/* Footer */}
         <footer className="mt-6 text-center text-xs text-gray-500">
-        © {new Date().getFullYear()} MyChatApp (Justin). All rights reserved.
+          © {new Date().getFullYear()} MyChatApp (Justin). All rights reserved.
         </footer>
-        </div>
-        </div>
-    )
-}
+      </div>
+    </div>
+  );
+};
 
-export default ForgotPassword
+export default ForgotPassword;

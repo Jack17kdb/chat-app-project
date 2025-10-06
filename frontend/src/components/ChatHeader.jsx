@@ -11,25 +11,24 @@ const ChatHeader = () => {
   const isOnline = onlineUsers?.includes(selectedUser._id);
 
   return (
-    <div className="flex items-center gap-3 px-4 py-2 bg-gray-900/60 backdrop-blur-sm border-b border-gray-700/30">
-      {/* Avatar with online status */}
-      <div className="relative">
+    <div className="flex items-center gap-2.5 px-3 py-2 bg-gray-900/60 backdrop-blur-sm border-b border-gray-700/30">
+      {/* ✅ Avatar with green border if online */}
+      <div
+        className={`rounded-full p-[1.5px] ${
+          isOnline ? "border-2 border-green-400" : "border-2 border-gray-600"
+        }`}
+      >
         <img
           src={selectedUser.profilePic || "/avatar.jpeg"}
           alt={selectedUser.username}
-          className="w-10 h-10 rounded-full object-cover border-2 border-gray-600"
+          className="w-9 h-9 rounded-full object-cover"
         />
-        {isOnline && (
-          <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-400 rounded-full border-2 border-gray-900"></div>
-        )}
       </div>
 
-      {/* User details */}
-      <div className="flex flex-col">
-        <h2 className="text-base font-semibold text-white">
-          {selectedUser.username}
-        </h2>
-      </div>
+      {/* ✅ Username only */}
+      <h2 className="text-sm font-semibold text-white truncate">
+        {selectedUser.username}
+      </h2>
     </div>
   );
 };

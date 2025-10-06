@@ -12,31 +12,32 @@ const Register = () => {
   const [userData, setUserData] = useState({
     username: "",
     email: "",
-    password: ""
+    password: "",
   });
 
   const validateForm = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!userData.username.trim()) return toast.error("username is required");
     if (!userData.email.trim()) return toast.error("email is required");
-    if (!emailRegex.test(userData.email))return toast.error("Please enter a valid email address");
+    if (!emailRegex.test(userData.email))
+      return toast.error("Please enter a valid email address");
     if (!userData.password.trim()) return toast.error("password is required");
-    if (userData.password.trim().length < 6) return toast.error("password length should not be less than 6");
+    if (userData.password.trim().length < 6)
+      return toast.error("password length should not be less than 6");
 
     return true;
-  }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const success = validateForm();
-    if (success ===true) signup(userData);
+    if (success === true) signup(userData);
     navigate("/");
-  }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-purple-900 to-gray-800 text-white px-4">
       <div className="w-full max-w-md bg-gray-900/60 backdrop-blur-lg rounded-2xl shadow-2xl p-8 border border-gray-700">
-
         {/* Title */}
         <h1 className="text-3xl font-extrabold text-center bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent mb-8">
           Create Account
@@ -44,18 +45,22 @@ const Register = () => {
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-5">
-
           {/* userName */}
           <div>
             <label className="block text-sm text-gray-300 mb-2">Username</label>
             <div className="relative">
-              <FiUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+              <FiUser
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                size={20}
+              />
               <input
                 type="text"
                 name="name"
-                value = {userData.username}
+                value={userData.username}
                 placeholder="Enter your username"
-                onChange={(e) => setUserData({...userData, username: e.target.value})}
+                onChange={(e) =>
+                  setUserData({ ...userData, username: e.target.value })
+                }
                 className="w-full pl-10 pr-4 py-3 rounded-xl bg-gray-800 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/50 transition"
               />
             </div>
@@ -65,15 +70,19 @@ const Register = () => {
           <div>
             <label className="block text-sm text-gray-300 mb-2">Email</label>
             <div className="relative">
-              <FiMail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+              <FiMail
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                size={20}
+              />
               <input
                 type="email"
                 name="email"
                 placeholder="Enter your email"
                 value={userData.email}
-                onChange={(e) => setUserData({...userData, email: e.target.value})}
+                onChange={(e) =>
+                  setUserData({ ...userData, email: e.target.value })
+                }
                 className="w-full pl-10 pr-4 py-3 rounded-xl bg-gray-800 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/50 transition"
-                
               />
             </div>
           </div>
@@ -82,15 +91,19 @@ const Register = () => {
           <div>
             <label className="block text-sm text-gray-300 mb-2">Password</label>
             <div className="relative">
-              <FiLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+              <FiLock
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                size={20}
+              />
               <input
                 type={showPassword ? "text" : "password"}
                 name="password"
                 placeholder="Enter your password"
                 value={userData.password}
-                onChange={(e) => setUserData({...userData, password: e.target.value})}
+                onChange={(e) =>
+                  setUserData({ ...userData, password: e.target.value })
+                }
                 className="w-full pl-10 pr-10 py-3 rounded-xl bg-gray-800 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/50 transition"
-                
               />
               <button
                 type="button"
@@ -114,7 +127,10 @@ const Register = () => {
         {/* Already have an account */}
         <p className="mt-8 text-center text-sm text-gray-400">
           Already have an account?{" "}
-          <a href="/login" className="text-cyan-400 font-medium hover:underline">
+          <a
+            href="/login"
+            className="text-cyan-400 font-medium hover:underline"
+          >
             Sign in
           </a>
         </p>
@@ -124,7 +140,8 @@ const Register = () => {
           © {new Date().getFullYear()}{" "}
           <span className="bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent font-semibold">
             MyChatApp (Justin)
-          </span>. All rights reserved.
+          </span>
+          . All rights reserved.
         </footer>
       </div>
     </div>

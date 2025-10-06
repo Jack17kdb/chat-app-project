@@ -4,7 +4,8 @@ import { useAuthStore } from "../store/AuthStore.js";
 import { Link } from "react-router-dom";
 
 const ProfilePage = () => {
-  const { authUser, isUpdatingProfile, profileUpdate } = useAuthStore();
+  const { authUser, isUpdatingProfile, profileUpdate, onlineUsers } =
+    useAuthStore();
   const [selectedImg, setSelectedImg] = useState(null);
 
   const handleImageSubmit = async (e) => {
@@ -33,7 +34,7 @@ const ProfilePage = () => {
         {/* Avatar with Camera Icon */}
         <div className="flex justify-center mb-4 relative">
           <img
-            src={authUser.profilePic || "/avatar.jpeg"}
+            src={authUser.profilePic || selectedImg || "/avatar.jpeg"}
             alt="Avatar"
             className="w-28 h-28 rounded-full border-4 border-cyan-400 shadow-lg object-cover"
           />
@@ -73,7 +74,9 @@ const ProfilePage = () => {
 
           <div className="flex justify-between items-center bg-gray-800 px-4 py-3 rounded-lg border border-gray-700 shadow-sm">
             <span className="font-semibold text-cyan-400">Status</span>
-            <span className="text-green-400 font-semibold">🟢 Online</span>
+            <span className="text-green-400 font-semibold">
+              {onlineUsers.includes(authUser._id) ? "Online" : "Offline"}
+            </span>
           </div>
 
           <div className="flex justify-between items-center bg-gray-800 px-4 py-3 rounded-lg border border-gray-700 shadow-sm">

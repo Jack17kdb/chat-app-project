@@ -1,19 +1,35 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { UseChatStore } from "../store/ChatStore.js";
 import ChatHeader from "./ChatHeader.jsx";
 import MessageSkeleton from "./MessageSkeleton.jsx";
 import { useAuthStore } from "../store/AuthStore.js";
 
 const ChatContainer = () => {
-  const { selectedUser, messages, getMessages, isMessagesLoading } =
-    UseChatStore();
+  const {
+    selectedUser,
+    messages,
+    getMessages,
+    isMessagesLoading,
+    subscribeMessages,
+    unsubscribeMessages,
+  } = UseChatStore();
   const { authUser } = useAuthStore();
+  const scrollToEnd = useRef(null);
 
+  // 🔹 Fetch & subscribe messages
   useEffect(() => {
     if (selectedUser?._id) {
       getMessages(selectedUser._id);
+      subscribeMessages();
+      return () => unsubscribeMessages();
     }
-  }, [selectedUser?._id, getMessages]);
+  }, [selectedUser?._id, getMessages, subscribeMessages, unsubscribeMessages]);
+
+  // 🔹 Auto-scroll
+  useEffect(() => {
+    if (scrollToEnd.current && messages)
+      scrollToEnd.current.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   if (isMessagesLoading) {
     return (
@@ -24,7 +40,7 @@ const ChatContainer = () => {
     );
   }
 
-  // Safe check for selectedUser
+  // No user selected
   if (!selectedUser) {
     return (
       <div className="flex-1 flex flex-col overflow-hidden">
@@ -56,14 +72,8 @@ const ChatContainer = () => {
         ) : (
           <div className="space-y-4">
             {messages
-              .filter((message) => message && typeof message === "object") // Filter out invalid messages
+              .filter((message) => message && typeof message === "object")
               .map((message) => {
-                // Enhanced safe check for message object and senderId
-                if (!message || typeof message !== "object") {
-                  console.warn("Invalid message object:", message);
-                  return null;
-                }
-
                 const senderId =
                   message.senderId || message.sender?._id || message.sender;
 
@@ -84,11 +94,12 @@ const ChatContainer = () => {
                 return (
                   <div
                     key={messageId}
+                    ref={scrollToEnd}
                     className={`flex gap-3 ${
                       isMyMessage ? "justify-end" : "justify-start"
                     }`}
                   >
-                    {/* Other User's Avatar - Only show for received messages */}
+                    {/* Receiver avatar */}
                     {!isMyMessage && (
                       <div className="flex-shrink-0">
                         <img
@@ -105,7 +116,6 @@ const ChatContainer = () => {
                         isMyMessage ? "items-end" : "items-start"
                       } max-w-[70%]`}
                     >
-                      {/* Sender Name - Only for received messages */}
                       {!isMyMessage && (
                         <span className="text-xs text-gray-400 mb-1 ml-2">
                           {selectedUser.username}
@@ -113,18 +123,18 @@ const ChatContainer = () => {
                       )}
 
                       <div
-                        className={`px-4 py-3 rounded-2xl ${
+                        className={`relative px-4 py-3 rounded-2xl ${
                           isMyMessage
                             ? "bg-cyan-500 text-white rounded-br-md"
                             : "bg-gray-700 text-white rounded-bl-md"
                         }`}
                       >
-                        {/* Check if message has image */}
+                        {/* If message has image */}
                         {messageImage ? (
                           <div className="flex flex-col gap-2">
                             <img
                               src={messageImage}
-                              alt="Shared image"
+                              alt="Shared"
                               className="max-w-full max-h-64 rounded-lg object-cover"
                             />
                             {messageText && (
@@ -151,7 +161,7 @@ const ChatContainer = () => {
                       </span>
                     </div>
 
-                    {/* My Avatar - Only show for sent messages */}
+                    {/* My Avatar */}
                     {isMyMessage && authUser && (
                       <div className="flex-shrink-0">
                         <img

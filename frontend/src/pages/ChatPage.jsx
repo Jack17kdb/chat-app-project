@@ -16,7 +16,7 @@ const ChatPage = () => {
 
   useEffect(() => {
     setSelectedUser(null);
-  }, [])
+  }, []);
 
   const handleSendMessage = () => {
     if (!authUser?.isVerified) {
@@ -32,51 +32,53 @@ const ChatPage = () => {
 
   return (
     <div className="h-screen flex flex-col bg-gradient-to-br from-gray-900 via-purple-950 to-gray-900 text-white">
-    {/* Top Navbar - Full width */}
-    <div className="flex-shrink-0">
-    <ChatNavbar />
-    </div>
+      {/* Top Navbar - Full width */}
+      <div className="flex-shrink-0">
+        <ChatNavbar />
+      </div>
 
-    {/* Main content area below navbar */}
-    <div className="flex-1 flex min-h-0">
-    {/* Sidebar on the left */}
-    <div className="w-64 h-full">
-    <Sidebar />
-    </div>
-
-    {/* Right side - chat content area */}
-    <div className="flex-1 flex flex-col min-h-0 bg-gradient-to-br from-gray-800/40 via-purple-900/15 to-gray-900/40">
-    {selectedUser ? (
-      <>
-      {/* Verification Banner for unverified users */}
-      {!authUser?.isVerified && (
-        <div className="bg-yellow-500/20 border border-yellow-500 text-yellow-300 p-3 text-center text-sm">
-        ⚠️ Please verify your email to send messages
+      {/* Main content area below navbar */}
+      <div className="flex-1 flex min-h-0">
+        {/* Sidebar on the left */}
+        <div className="w-64 h-full">
+          <Sidebar />
         </div>
-      )}
 
-      {/* Chat messages */}
-      <div className="flex-1 overflow-y-auto">
-      <ChatContainer />
-      </div>
+        {/* Right side - chat content area */}
+        <div className="flex-1 flex flex-col min-h-0 bg-gradient-to-br from-gray-800/40 via-purple-900/15 to-gray-900/40">
+          {selectedUser ? (
+            <>
+              {/* Verification Banner for unverified users */}
+              {!authUser?.isVerified && (
+                <div className="bg-yellow-500/20 border border-yellow-500 text-yellow-300 p-3 text-center text-sm">
+                  ⚠️ Please verify your email to send messages
+                </div>
+              )}
 
-      {/* Chat input */}
-      {authUser?.isVerified && (<div className="flex-shrink-0">
-        <Chatbar
-        message={message}
-        setMessage={setMessage}
-        onSendMessage={handleSendMessage}
-        disabled={!authUser?.isVerified}
-        />
-        </div>)}
-      </>
-    ) : (
-      <div className="flex-1 flex items-center justify-center">
-      <EmptyContainer />
+              {/* Chat messages */}
+              <div className="flex-1 overflow-y-auto">
+                <ChatContainer />
+              </div>
+
+              {/* Chat input */}
+              {authUser?.isVerified && (
+                <div className="flex-shrink-0">
+                  <Chatbar
+                    message={message}
+                    setMessage={setMessage}
+                    onSendMessage={handleSendMessage}
+                    disabled={!authUser?.isVerified}
+                  />
+                </div>
+              )}
+            </>
+          ) : (
+            <div className="flex-1 flex items-center justify-center">
+              <EmptyContainer />
+            </div>
+          )}
+        </div>
       </div>
-    )}
-    </div>
-    </div>
     </div>
   );
 };

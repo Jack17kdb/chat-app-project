@@ -1,42 +1,42 @@
 import Message from "../models/messages.model.js";
 import User from "../models/user.model.js";
 import cloudinary from "../lib/cloudinary.js";
+import { getSocketId, io } from "../lib/socketio.js";
 
 const getUsers = async (req, res) => {
     try {
         const loggedInUser = req.user._id;
-        const filteredUsers = await User.find({_id: {$ne: loggedInUser}}).select("-password");
-
+        const filteredUsers = await User.find({ _id: { $ne: loggedInUser } }).select("-password");
         res.status(200).json(filteredUsers);
     } catch (error) {
-        console.log("Error getting users", error);
+        console.error("Error getting users:", error);
         res.status(500).json({ message: "Internal server error" });
     }
-}
+};
 
 const getMessages = async (req, res) => {
     try {
-        const { id:friendId } = req.params;
+        const { id: friendId } = req.params;
         const myId = req.user._id;
 
         const messages = await Message.find({
             $or: [
                 { senderId: myId, receiverId: friendId },
-                { senderId: friendId, receiverId: myId }
-            ]
-        });
+                { senderId: friendId, receiverId: myId },
+            ],
+        }).sort({ createdAt: 1 });
 
         res.status(200).json(messages);
     } catch (error) {
-        console.log("Error getting messages", error);
+        console.error("Error getting messages:", error);
         res.status(500).json({ message: "Internal server error" });
     }
-}
+};
 
 const sendMessages = async (req, res) => {
     try {
         const { text, image } = req.body;
-        const { id:receiverId } = req.params;
+        const { id: receiverId } = req.params;
         const senderId = req.user._id;
 
         let imageUrl;
@@ -49,14 +49,22 @@ const sendMessages = async (req, res) => {
             senderId,
             receiverId,
             text,
-            image: imageUrl
+            image: imageUrl,
+            isRead: false,
         });
-        newMessage.save();
+
+        await newMessage.save();
+
+        const receiverSocketId = getSocketId(receiverId);
+        if (receiverSocketId) {
+            io.to(receiverSocketId).emit("newMessage", newMessage);
+        }
+
         res.status(201).json(newMessage);
     } catch (error) {
-        console.log("Error sending message", error);
+        console.error("Error sending message:", error);
         res.status(500).json({ message: "Internal server error" });
     }
-}
+};
 
 export default { getUsers, getMessages, sendMessages };
