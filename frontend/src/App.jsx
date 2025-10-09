@@ -4,7 +4,7 @@ import { useAuthStore } from "./store/AuthStore.js";
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
 import ForgotPassword from "./pages/ForgotPassword.jsx";
-import Status from "./pages/Status.jsx";
+import Settings from "./pages/Settings.jsx";
 import ProfilePage from "./pages/ProfilePage.jsx";
 import ChatPage from "./pages/ChatPage.jsx";
 import ResetPassword from "./pages/ResetPassword.jsx";
@@ -55,7 +55,7 @@ function App() {
               authUser && !authUser.isVerified ? <VerifyEmail /> : <ChatPage />
             }
           />
-          <Route path="/status" element={authUser ? <Status /> : <Login />} />
+          <Route path="/settings" element={authUser ? <Settings /> : <Login />} />
           <Route
             path="/profile"
             element={authUser ? <ProfilePage /> : <Login />}

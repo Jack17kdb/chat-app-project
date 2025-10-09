@@ -123,6 +123,46 @@ export const useAuthStore = create((set, get) => ({
     }
   },
 
+  changeUsername: async (username) => {
+    try {
+      const res = await axiosInstance.put("/auth/username-update", { username });
+      set({authUser: res.data});
+      toast.success("Username updated successfully");
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  },
+
+  changeEmail: async (email) => {
+    try {
+      const res = await axiosInstance.put("/auth/email-update", { email });
+      set({authUser: res.data});
+      toast.success("Email updated successfully");
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  },
+
+  changePassword: async (data) => {
+    try {
+      const res = await axiosInstance.put("/auth/password-update", data);
+      set({authUser: res.data});
+      toast.success("Password updated successfully");
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  },
+
+  deleteAccount: async () => {
+    try {
+      await axiosInstance.delete("/auth/delete-account");
+      set({authUser: null});
+      toast.success("Account deleted successfully");
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  },
+
   connectSocket: async () => {
     const { authUser } = get();
     if(!authUser || get().socket?.connected) return

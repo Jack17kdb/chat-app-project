@@ -15,6 +15,9 @@ const signup = async (req, res) => {
             return res.status(400).json({ message: "Password must be at least 6 characters long" });
         }
 
+        const usernameExists = await User.findOne({ username });
+        if (usernameExists) return res.status(400).json({ message: "Username already exists" });
+
         const user = await User.findOne({ email });
         if (user) return res.status(400).json({ message: "User already exists" });
 
@@ -174,6 +177,110 @@ const profileUpdate = async (req, res) => {
     }
 }
 
+const changeUsername = async (req, res) => {
+    const { username } = req.body;
+    try {
+        if (!username || username.trim() === "") {
+            return res.status(400).json({ message: "Username cannot be empty" });
+        }
+
+        const existingUser = await User.findOne({username});
+        if(existingUser) return res.status(400).json({ message: "Username already taken" });
+
+        const user = await User.findById(req.user._id);
+        return res.status(404).json({ message: "User not found" });
+
+        user.username = username;
+        await user.save();
+        return res.status(200).json({
+            _id: user._id,
+            username: user.username,
+            email: user.email,
+            profilePic: user.profilePic,
+            isVerified: user.isVerified,
+        });
+    } catch (error) {
+        console.error("Error updating username:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
+
+const changeEmail = async (req, res) => {
+    const { email } = req.body;
+    try {
+        if (!email || email.trim() === "") {
+            return res.status(400).json({ message: "Email cannot be empty" });
+        }
+
+        const existingUser = await User.findOne({email});
+        if(existingUser) return res.status(400).json({ message: "Email already exists" });
+
+        const user = await User.findById(req.user._id);
+        if(!user) return res.status(404).json({ message: "User not found" });
+
+        user.email = email;
+        await user.save()
+        return res.status(200).json({
+            _id: user._id,
+            username: user.username,
+            email: user.email,
+            profilePic: user.profilePic,
+            isVerified: user.isVerified,
+        });
+
+    } catch (error) {
+        console.error("Error updating email:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
+
+const changePassword = async (req, res) => {
+    const { currentPassword, newPassword, confirmPassword } = req.body;
+    try {
+        if (!currentPassword || currentPassword.trim() === "" || !newPassword || newPassword.trim() === "" || !confirmPassword || confirmPassword.trim() === "") {
+            return res.status(400).json({ message: "Please fill all fields" });
+        }
+
+        if(newPassword !== confirmPassword) return res.status(400).json({ message: "Passwords must match" });
+
+        const user = await User.findById(req.user._id);
+        if(!user) return res.status(404).json({ message: "User not found" });
+
+        const isMatch = await bcrypt.compare(currentPassword, user.password);
+        if(!isMatch) return res.status(400).json({message: "Wrong password"});
+
+        const salt = await bcrypt.genSalt(10);
+        const hash = await bcrypt.hash(newPassword, salt);
+
+        user.password = hash;
+        await user.save();
+        return res.status(200).json({
+            _id: user._id,
+            username: user.username,
+            email: user.email,
+            profilePic: user.profilePic,
+            isVerified: user.isVerified,
+        });
+    } catch (error) {
+        console.error("Error updating password:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
+
+const deleteAccount = async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id);
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        await User.findByIdAndDelete(req.user._id);
+    } catch (error) {
+        console.error("Error deleting user:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
+
 const checkAuth = (req, res) => {
     try {
         res.status(200).json(req.user);
@@ -183,4 +290,4 @@ const checkAuth = (req, res) => {
     }
 }
 
-export default { signup, login, logout, profileUpdate, checkAuth, verifyEmail, forgotPassword, resetPassword };
+export default { signup, login, logout, profileUpdate, checkAuth, verifyEmail, forgotPassword, resetPassword, deleteAccount, changePassword, changeEmail, changeUsername };
