@@ -11,24 +11,10 @@ import toast from "react-hot-toast";
 const ChatPage = () => {
   const { selectedUser, setSelectedUser } = UseChatStore();
   const { authUser } = useAuthStore();
-  const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState([]);
 
   useEffect(() => {
     setSelectedUser(null);
   }, []);
-
-  const handleSendMessage = () => {
-    if (!authUser?.isVerified) {
-      toast.error("Please verify your email before sending messages");
-      return;
-    }
-
-    if (message.trim()) {
-      setMessages((prev) => [...prev, { text: message, sender: "user" }]);
-      setMessage("");
-    }
-  };
 
   return (
     <div className="h-screen flex flex-col bg-gradient-to-br from-gray-900 via-purple-950 to-gray-900 text-white">
@@ -63,12 +49,7 @@ const ChatPage = () => {
               {/* Chat input */}
               {authUser?.isVerified && (
                 <div className="flex-shrink-0">
-                  <Chatbar
-                    message={message}
-                    setMessage={setMessage}
-                    onSendMessage={handleSendMessage}
-                    disabled={!authUser?.isVerified}
-                  />
+                  <Chatbar/>
                 </div>
               )}
             </>

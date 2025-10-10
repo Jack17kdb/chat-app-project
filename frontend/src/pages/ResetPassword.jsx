@@ -6,7 +6,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 const ResetPassword = () => {
   const [newPassword, setNewPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [status, setStatus] = useState("ready"); // ready, loading, success, error
+  const [status, setStatus] = useState("ready");
   const [message, setMessage] = useState("");
   const { resetPassword } = useAuthStore();
   const navigate = useNavigate();
