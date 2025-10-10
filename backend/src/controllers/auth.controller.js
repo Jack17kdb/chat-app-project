@@ -127,7 +127,12 @@ const forgotPassword = async (req, res) => {
         user.resetPasswordToken = resetToken
         user.resetPasswordExpiresAt = resetTokenExpiresAt
         await user.save()
-        await sendPasswordResetEmail(email, resetToken)
+        try {
+            await sendPasswordResetEmail(email, resetToken)
+            console.log("email sent successfully");
+        } catch (error) {
+            console.log("error sending password reset email");
+        }
         res.status(200).json({ message: "Password reset email sent" });
     } catch (error) {
         console.log("Error sending reset email: ", error)
