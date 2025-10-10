@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { ArrowLeft } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/AuthStore.js";
 
 const Settings = () => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("username");
 
   const [username, setUsername] = useState("");
@@ -41,6 +42,7 @@ const Settings = () => {
       )
     ) {
       await deleteAccount();
+      navigate("/login");
     }
   };
 
