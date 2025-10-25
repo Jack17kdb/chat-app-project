@@ -12,9 +12,23 @@ const ChatPage = () => {
   const { selectedUser, setSelectedUser } = UseChatStore();
   const { authUser } = useAuthStore();
 
+  const [replyingTo, setReplyingTo] = useState(null);
+
   useEffect(() => {
     setSelectedUser(null);
   }, []);
+
+  useEffect(() => {
+    setReplyingTo(null);
+  }, [selectedUser]);
+
+  const handleReply = (message) => {
+    setReplyingTo(message);
+  };
+
+  const cancelReply = () => {
+    setReplyingTo(null);
+  };
 
   return (
     <div className="h-screen flex flex-col bg-gradient-to-br from-gray-900 via-purple-950 to-gray-900 text-white">
@@ -43,13 +57,20 @@ const ChatPage = () => {
 
               {/* Chat messages */}
               <div className="flex-1 overflow-y-auto">
-                <ChatContainer />
+                <ChatContainer
+                  replyingTo={replyingTo}
+                  onReply={handleReply}
+                  onCancelReply={cancelReply}
+                />
               </div>
 
               {/* Chat input */}
               {authUser?.isVerified && (
                 <div className="flex-shrink-0">
-                  <Chatbar/>
+                  <Chatbar
+                    replyingTo={replyingTo}
+                    onCancelReply={cancelReply}
+                  />
                 </div>
               )}
             </>

@@ -193,7 +193,7 @@ const changeUsername = async (req, res) => {
         if(existingUser) return res.status(400).json({ message: "Username already taken" });
 
         const user = await User.findById(req.user._id);
-        return res.status(404).json({ message: "User not found" });
+        if(!user) return res.status(404).json({ message: "User not found" });
 
         user.username = username;
         await user.save();
@@ -280,6 +280,7 @@ const deleteAccount = async (req, res) => {
         }
 
         await User.findByIdAndDelete(req.user._id);
+        res.status(200).json({ message: "Account deleted successfully" });
     } catch (error) {
         console.error("Error deleting user:", error);
         res.status(500).json({ message: "Internal server error" });

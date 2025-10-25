@@ -6,6 +6,7 @@ import { useAuthStore } from "./AuthStore";
 export const UseChatStore = create((set, get) => ({
   messages: [],
   users: [],
+  deletedMessagesIds: [],
   selectedUser: null,
   isUsersLoading: false,
   isMessagesLoading: false,
@@ -47,6 +48,51 @@ export const UseChatStore = create((set, get) => ({
     }
   },
 
+  editMessage: async (messageId, newText) => {
+    try {
+      const res = await axiosInstance.put(`/message/edit/${messageId}`, {
+        text: newText
+      });
+
+      set((state) => ({
+        messages: state.messages.map((msg) =>
+          msg._id === messageId ? res.data : msg
+        )
+      }));
+
+      toast.success("Message edited successfully");
+    } catch(error) {
+      toast.error(error.response?.data?.message || "Failed to edit message");
+    }
+  },
+
+  deleteMessage: async (messageId, deleteForEveryone=false) => {
+    try {
+      const res = await axiosInstance.delete(`/message/delete/${messageId}`, {
+        data: {deleteForEveryone}
+      });
+
+      if (deleteForEveryone) {
+
+        set((state) => ({
+          messages: state.messages.map((msg) =>
+            msg._id === messageId ? {
+              ...msg, isDeleted: true, text: "This message was deleted"
+            } : msg
+          )
+        }));
+
+      } else {
+        set((state) => ({
+          deletedMessagesIds: [...state.deletedMessagesIds, messageId]
+        }));
+      }
+
+      toast.success("Message deleted successfully")
+    } catch(error) {
+      toast.error(error.response?.data?.message || "Failed to delete message");
+    }
+  },
 
   subscribeMessages: () => {
     const { selectedUser } = get();
@@ -61,7 +107,31 @@ export const UseChatStore = create((set, get) => ({
 
     socket.on("newMessage", (newMessage) => {
       if (newMessage.senderId === selectedUser._id) {
-        set({ messages: [...get().messages, newMessage] });
+        set((state) => ({
+          messages: [...state.messages, newMessage]
+        }));
+      }
+    });
+
+    socket.on("messageEdited", (editedMessage) => {
+      set((state) => ({
+        messages: state.messages.map((msg) =>
+          msg._id === editedMessage._id ? editedMessage : msg
+        )
+      }));
+    });
+
+    socket.on("deletedMessage", ({ messageId, deleteForEveryone }) => {
+      if (deleteForEveryone) {
+        set((state) => ({
+          messages: state.messages.map((msg) =>
+            msg._id === messageId ? {
+              ...msg,
+              isDeleted: true,
+              text: "This message was deleted"
+            } : msg
+          )
+        }));
       }
     });
   },
@@ -74,6 +144,8 @@ export const UseChatStore = create((set, get) => ({
       return;
     }
     socket.off("newMessage");
+    socket.off("messageEdited");
+    socket.off("deletedMessage");
   },
 
   setSelectedUser: (selectedUser) => set({ selectedUser }),

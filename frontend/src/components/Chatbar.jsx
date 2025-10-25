@@ -1,10 +1,10 @@
-import React, { useState, useRef } from "react";
-import { Camera, Send, Plus, Smile, Bot, X } from "lucide-react";
+import React, { useState, useRef, useEffect } from "react";
+import { Camera, Send, Smile, Bot, X, Reply } from "lucide-react";
 import EmojiPicker from "emoji-picker-react";
 import { UseChatStore } from "../store/ChatStore.js";
 import toast from "react-hot-toast";
 
-const Chatbar = () => {
+const Chatbar = ({ replyingTo, onCancelReply }) => {
   const { sendMessages } = UseChatStore();
   const [message, setMessage] = useState("");
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
@@ -24,15 +24,20 @@ const Chatbar = () => {
       await sendMessages({
         text: message,
         image: selectedImage,
+        replyTo: replyingTo?._id
       });
 
       setSelectedImage(null);
       setMessage("");
+      if (replyingTo) {
+        onCancelReply();
+      }
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
       }
     } catch (error) {
       console.error("Failed to send message: ", error);
+      toast.error("Failed to send message");
     }
   };
 
@@ -72,6 +77,25 @@ const Chatbar = () => {
 
   return (
     <div className="flex flex-col">
+      {/* Reply Preview */}
+      {replyingTo && (
+        <div className="bg-gray-800 border-b border-gray-700 p-3 flex items-center justify-between">
+          <div className="flex items-center gap-2 text-sm">
+            <Reply className="w-4 h-4 text-cyan-400" />
+            <span className="text-gray-300">Replying to:</span>
+            <span className="text-cyan-400 truncate max-w-[200px]">
+              {replyingTo.text || replyingTo.content}
+            </span>
+          </div>
+          <button
+            onClick={onCancelReply}
+            className="text-gray-400 hover:text-white p-1"
+          >
+            <X size={16} />
+          </button>
+        </div>
+      )}
+
       {/* Image Preview */}
       {selectedImage && (
         <div className="relative p-3 bg-gray-800 border-b border-gray-700">
@@ -95,6 +119,7 @@ const Chatbar = () => {
           </div>
         </div>
       )}
+
       <form onSubmit={handleSendMessage}>
         <div className="flex items-center gap-3 p-3 backdrop-blur-lg bg-gray-900/20 border-t border-gray-700">
           {/* Hidden file input */}
@@ -148,7 +173,7 @@ const Chatbar = () => {
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             onKeyDown={handleKeyPress}
-            placeholder="Type a message..."
+            placeholder={replyingTo ? "Type your reply..." : "Type a message..."}
             className="flex-1 px-4 py-2 rounded-lg bg-gray-800 text-white border border-gray-600 focus:border-cyan-400 focus:ring focus:ring-cyan-500/40 outline-none"
           />
 

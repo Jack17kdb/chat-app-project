@@ -1,16 +1,22 @@
-import { Resend } from "resend";
+import nodemailer from "nodemailer";
 import dotenv from "dotenv";
 
 dotenv.config();
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.GMAIL_USER,
+    pass: process.env.GMAIL_APP_PASSWORD,
+  },
+});
 
 export const sendVerificationEmail = async (email, verificationToken) => {
   const verificationUrl = `${process.env.CLIENT_URL}/verify-email?token=${verificationToken}`;
 
   try {
-    await resend.emails.send({
-      from: "ChitChat App <onboarding@resend.dev>",
+    await transporter.sendMail({
+      from: `"ChitChat App" <${process.env.GMAIL_USER}>`,
       to: email,
       subject: "Verify Your Email - ChitChat Chat App",
       html: `
@@ -19,7 +25,6 @@ export const sendVerificationEmail = async (email, verificationToken) => {
       <div style="background: linear-gradient(135deg, #6e00ff, #a100ff); padding: 20px; text-align: center; color: #fff;">
       <h1 style="margin: 0; font-size: 24px;">ChitChat Chat App</h1>
       </div>
-
       <div style="padding: 30px; text-align: center; color: #333;">
       <h2>Welcome to ChitChat Chat App!</h2>
       <p>Please verify your email by clicking below:</p>
@@ -27,12 +32,9 @@ export const sendVerificationEmail = async (email, verificationToken) => {
       style="display:inline-block;margin-top:20px;background:linear-gradient(90deg,#6e00ff,#a100ff);color:white;text-decoration:none;padding:12px 28px;border-radius:8px;font-size:16px;font-weight:bold;">
       Verify Email
       </a>
-      <p style="margin-top:25px;font-size:14px;color:#777;">
-      If that doesn't work, copy and paste this link:
-      </p>
+      <p style="margin-top:25px;font-size:14px;color:#777;">If that doesn't work, copy and paste this link:</p>
       <p style="word-break:break-all;color:#6e00ff;">${verificationUrl}</p>
       </div>
-
       <div style="background-color:#f0f0f5;text-align:center;padding:15px;font-size:13px;color:#888;">
       <p>&copy; ${new Date().getFullYear()} ChitChat Chat App. All rights reserved.</p>
       </div>
@@ -52,8 +54,8 @@ export const sendPasswordResetEmail = async (email, resetToken) => {
   const resetUrl = `${process.env.CLIENT_URL}/reset-password?token=${resetToken}`;
 
   try {
-    await resend.emails.send({
-      from: "ChitChat App <onboarding@resend.dev>",
+    await transporter.sendMail({
+      from: `"ChitChat App" <${process.env.GMAIL_USER}>`,
       to: email,
       subject: "Reset Your Password - ChitChat Chat App",
       html: `
@@ -62,7 +64,6 @@ export const sendPasswordResetEmail = async (email, resetToken) => {
       <div style="background:linear-gradient(135deg,#ff0040,#ff6b81);padding:20px;text-align:center;color:#fff;">
       <h1 style="margin:0;font-size:24px;">ChitChat Chat App</h1>
       </div>
-
       <div style="padding:30px;text-align:center;color:#333;">
       <h2>Password Reset Request</h2>
       <p>Click the button below to reset your password:</p>
@@ -70,12 +71,9 @@ export const sendPasswordResetEmail = async (email, resetToken) => {
       style="display:inline-block;margin-top:20px;background:linear-gradient(90deg,#ff0040,#ff6b81);color:white;text-decoration:none;padding:12px 28px;border-radius:8px;font-size:16px;font-weight:bold;">
       Reset Password
       </a>
-      <p style="margin-top:25px;font-size:14px;color:#777;">
-      Or copy this link:
-      </p>
+      <p style="margin-top:25px;font-size:14px;color:#777;">Or copy this link:</p>
       <p style="word-break:break-all;color:#ff0040;">${resetUrl}</p>
       </div>
-
       <div style="background-color:#f0f0f5;text-align:center;padding:15px;font-size:13px;color:#888;">
       <p>&copy; ${new Date().getFullYear()} ChitChat Chat App. All rights reserved.</p>
       </div>

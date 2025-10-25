@@ -25,6 +25,26 @@ const messageSchema = new mongoose.Schema({
         type: Date,
         default: null
     },
+    isEdited: {
+        type: Boolean,
+        default: false
+    },
+    editedAt: {
+        type: Date,
+        default: null
+    },
+    isDeleted: {
+        type: Boolean,
+        default: false
+    },
+    deletedAt: {
+        type: Date,
+        default: null
+    },
+    deletedBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+    }
 }, {timestamps: true});
 
 const Message = mongoose.model("Message", messageSchema);
