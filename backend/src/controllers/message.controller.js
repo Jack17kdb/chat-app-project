@@ -24,6 +24,13 @@ const getMessages = async (req, res) => {
                 { senderId: myId, receiverId: friendId },
                 { senderId: friendId, receiverId: myId },
             ],
+        }).populate({
+            path: "replyTo",
+            select: "text image senderId isDeleted",
+            populate: {
+                path: "senderId",
+                select: "username profilePic"
+            }
         }).sort({ createdAt: 1 });
 
         res.status(200).json(messages);
@@ -35,7 +42,7 @@ const getMessages = async (req, res) => {
 
 const sendMessages = async (req, res) => {
     try {
-        const { text, image } = req.body;
+        const { text, image, replyTo } = req.body;
         const { id: receiverId } = req.params;
         const senderId = req.user._id;
 
@@ -49,11 +56,13 @@ const sendMessages = async (req, res) => {
             senderId,
             receiverId,
             text,
+            replyTo: replyTo || null,
             image: imageUrl,
             isRead: false,
         });
 
         await newMessage.save();
+        await newMessage.populate("replyTo", "text senderId isDeleted");
 
         const receiverSocketId = getSocketId(receiverId);
         if (receiverSocketId) {

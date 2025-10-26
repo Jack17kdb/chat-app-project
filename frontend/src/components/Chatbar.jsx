@@ -77,13 +77,14 @@ const Chatbar = ({ replyingTo, onCancelReply }) => {
 
   return (
     <div className="flex flex-col">
-      {/* Reply Preview */}
+
+      {/*Reply structure*/}
       {replyingTo && (
         <div className="bg-gray-800 border-b border-gray-700 p-3 flex items-center justify-between">
           <div className="flex items-center gap-2 text-sm">
-            <Reply className="w-4 h-4 text-cyan-400" />
+            <Reply className="w-4 h-4 text-purple-400" />
             <span className="text-gray-300">Replying to:</span>
-            <span className="text-cyan-400 truncate max-w-[200px]">
+            <span className="text-purple-400 truncate max-w-[200px]">
               {replyingTo.text || replyingTo.content}
             </span>
           </div>
@@ -96,7 +97,7 @@ const Chatbar = ({ replyingTo, onCancelReply }) => {
         </div>
       )}
 
-      {/* Image Preview */}
+      {/*Image preview*/}
       {selectedImage && (
         <div className="relative p-3 bg-gray-800 border-b border-gray-700">
           <div className="flex items-center gap-3">
@@ -122,7 +123,6 @@ const Chatbar = ({ replyingTo, onCancelReply }) => {
 
       <form onSubmit={handleSendMessage}>
         <div className="flex items-center gap-3 p-3 backdrop-blur-lg bg-gray-900/20 border-t border-gray-700">
-          {/* Hidden file input */}
           <input
             type="file"
             ref={fileInputRef}
@@ -131,22 +131,20 @@ const Chatbar = ({ replyingTo, onCancelReply }) => {
             className="hidden"
           />
 
-          {/* Camera/Upload Button */}
           <button
             type="button"
             onClick={handleCameraClick}
-            className="cursor-pointer active:scale-96 p-2 rounded-lg bg-gray-800 hover:bg-cyan-500 hover:text-gray-900 transition"
+            className="cursor-pointer active:scale-96 p-2 rounded-lg bg-gray-800 hover:bg-purple-500 hover:text-gray-900 transition"
             title="Add media"
           >
             <Camera size={20} />
           </button>
 
-          {/* Emoji Button */}
           <div className="relative">
             <button
               type="button"
               onClick={() => setShowEmojiPicker((prev) => !prev)}
-              className="cursor-pointer active:scale-96 p-2 rounded-lg bg-gray-800 hover:bg-cyan-500 hover:text-gray-900 transition"
+              className="cursor-pointer active:scale-96 p-2 rounded-lg bg-gray-800 hover:bg-purple-500 hover:text-gray-900 transition"
               title="Add emoji"
             >
               <Smile size={20} />
@@ -158,30 +156,27 @@ const Chatbar = ({ replyingTo, onCancelReply }) => {
             )}
           </div>
 
-          {/* AI Suggestions Button */}
           <button
             type="button"
-            className="cursor-pointer active:scale-96 p-2 rounded-lg bg-gray-800 hover:bg-cyan-500 hover:text-gray-900 transition"
+            className="cursor-pointer active:scale-96 p-2 rounded-lg bg-gray-800 hover:bg-purple-500 hover:text-gray-900 transition"
             title="AI reply suggestions"
           >
             <Bot size={20} />
           </button>
 
-          {/* Input */}
           <input
             type="text"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             onKeyDown={handleKeyPress}
             placeholder={replyingTo ? "Type your reply..." : "Type a message..."}
-            className="flex-1 px-4 py-2 rounded-lg bg-gray-800 text-white border border-gray-600 focus:border-cyan-400 focus:ring focus:ring-cyan-500/40 outline-none"
+            className="flex-1 px-4 py-2 rounded-lg bg-gray-800 text-white border border-gray-600 focus:border-purple-400 focus:ring focus:ring-purple-500/40 outline-none"
           />
 
-          {/* Send button - only when typing or when image is selected */}
           {(message.trim() || selectedImage) && (
             <button
               type="submit"
-              className="cursor-pointer active:scale-96 p-3 bg-cyan-500 hover:bg-cyan-400 text-gray-900 font-semibold rounded-full shadow transition"
+              className="cursor-pointer active:scale-96 p-3 bg-purple-500 hover:bg-purple-400 text-gray-900 font-semibold rounded-full shadow transition"
               title="Send"
             >
               <Send size={20} />

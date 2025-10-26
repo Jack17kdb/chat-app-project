@@ -170,7 +170,9 @@ const resetPassword = async (req, res) => {
 const profileUpdate = async (req, res) => {
     const { profilePic } = req.body;
     try {
-        if (!profilePic) return res.status(400).json({ message: "Please provide a profile picture" }).select("-password");
+        if (!profilePic) {
+            return res.status(400).json({ message: "Please provide a profile picture" });
+        }
         const userId = req.user._id;
 
         const uploadResponse = await cloudinary.uploader.upload(profilePic);

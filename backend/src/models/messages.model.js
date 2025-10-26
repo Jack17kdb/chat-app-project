@@ -44,6 +44,11 @@ const messageSchema = new mongoose.Schema({
     deletedBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"
+    },
+    replyTo: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Message",
+        default: null
     }
 }, {timestamps: true});
 
