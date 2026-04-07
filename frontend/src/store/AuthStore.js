@@ -36,7 +36,7 @@ export const useAuthStore = create((set, get) => ({
       const res = await axiosInstance.post("/auth/signup", data);
       set({ authUser: res.data });
       toast.success(
-        "Registration successful! Please check your email for verification."
+        "Registration successful! Welcome to ChitChat 🎉"
       );
       get().connectSocket()
     } catch (error) {

@@ -8,7 +8,6 @@ import Settings from "./pages/Settings.jsx";
 import ProfilePage from "./pages/ProfilePage.jsx";
 import ChatPage from "./pages/ChatPage.jsx";
 import ResetPassword from "./pages/ResetPassword.jsx";
-import VerifyEmail from "./pages/VerifyEmailPage.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import { Loader } from "lucide-react";
 import { Toaster } from "react-hot-toast";
@@ -22,8 +21,6 @@ function App() {
     };
     initAuth();
   }, [checkAuth]);
-
-  console.log({ authUser });
 
   if (isCheckingAuth && !authUser)
     return (
@@ -49,12 +46,6 @@ function App() {
           <Route
             path="/reset-password"
             element={!authUser ? <ResetPassword /> : <ChatPage />}
-          />
-          <Route
-            path="/verify-email"
-            element={
-              authUser && !authUser.isVerified ? <VerifyEmail /> : <ChatPage />
-            }
           />
           <Route path="/settings" element={authUser ? <Settings /> : <Login />} />
           <Route
